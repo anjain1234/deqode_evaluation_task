@@ -53,7 +53,7 @@ const BottomTabs = () => {
                         return (
                             <BuildTabComponent
                                 image={"search"}
-                                text="Explore"
+                                text="Settings"
                                 focused={focused}
                             />
                         );
@@ -68,8 +68,8 @@ const BottomTabs = () => {
                     tabBarIcon: ({ focused }) => {
                         return (
                             <BuildTabComponent
-                                image={"shopping-bag"}
-                                text="OTT"
+                                image={"user"}
+                                text="Profile"
                                 focused={focused}
                             />
                         );

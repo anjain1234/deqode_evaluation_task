@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
-// import { Provider as ReduxProvider } from "react-redux";
-// import configureStore from './redux/store';
+import { Provider as ReduxProvider } from "react-redux";
+// import configureStore from '../redux/store';
 import AppNavigation from '../navigation/AppNavigation';
+import store from '../redux/store';
 
 // const store = configureStore();
 
@@ -21,9 +22,9 @@ const Routes = () => {
     if (initializing) return null;
 
     return (
-        // <ReduxProvider store={store}>
-        <AppNavigation />
-        // </ReduxProvider>
+        <ReduxProvider store={store}>
+            <AppNavigation />
+        </ReduxProvider>
     );
 };
 

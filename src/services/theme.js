@@ -5,6 +5,7 @@ export const COLORS = {
     lime: "#2AD699",
     lightGreen: "#E7F9EF",
     lightGreen1: "#8EbCA0",
+    seagreen: "#01C38E",
 
     // base colors
     primary: "#FC6D3F", // orange
