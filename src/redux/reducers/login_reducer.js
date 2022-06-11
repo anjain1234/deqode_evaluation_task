@@ -1,45 +1,21 @@
-import { LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT } from "../action_types/login_action_type";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { EMAIL_FOUND_ERROR, EMAIL_FOUND_SUCCESS } from "../action_types/email_input_action_type";
+import { FETCH_PROFILE_ERROR, FETCH_PROFILE_SUCCESS } from "../action_types/profile_sction_types";
 
-const user = AsyncStorage.getItem("user");
-
-const initialState = user
-    ? { isLoggedIn: true, user }
-    : { isLoggedIn: false, user: null };
+const initialState = { isLoading: false, userData: null };
 
 export default login_reducer = (state = initialState, action) => {
     const { type, payload } = action;
     switch (type) {
-        case EMAIL_FOUND_SUCCESS:
+        case FETCH_PROFILE_SUCCESS:
             return {
                 ...state,
-                isLoggedIn: true,
-                user: null,
+                isLoading: true,
+                userData: payload,
             };
-        case EMAIL_FOUND_ERROR:
+        case FETCH_PROFILE_ERROR:
             return {
                 ...state,
-                isLoggedIn: false,
-                user: null,
-            };
-        case LOGIN_SUCCESS:
-            return {
-                ...state,
-                isLoggedIn: true,
-                user: payload.user,
-            };
-        case LOGIN_ERROR:
-            return {
-                ...state,
-                isLoggedIn: false,
-                user: null,
-            };
-        case LOGOUT:
-            return {
-                ...state,
-                isLoggedIn: false,
-                user: null,
+                isLoading: false,
+                userData: null,
             };
         default:
             return state;

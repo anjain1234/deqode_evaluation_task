@@ -4,11 +4,11 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
+    Text,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/AntDesign';
 import { COLORS } from '../services/theme';
 import { windowWidth } from '../services/utils';
-import CustomTextComponent from './custom_text_component';
 
 const CustomInput = ({
     labelValue,
@@ -19,22 +19,12 @@ const CustomInput = ({
     iconType,
     passwordIcon,
     value,
-    headingText,
     error,
     onPress,
     ...rest
 }) => {
     return (
         <View style={{ width: '100%' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <CustomTextComponent
-                    fs={13}
-                    textColor={COLORS.darkgray}
-                    fw="600"
-                    text={headingText}
-                />
-                <CustomTextComponent fs={13} textColor={'red'} fw="600" text={error} />
-            </View>
             <View style={styles.inputContainer}>
                 <TextInput
                     defaultValue={labelValue}
@@ -52,6 +42,9 @@ const CustomInput = ({
                     <Entypo name={iconType} size={20} color="silver" />
                 </TouchableOpacity>
             </View>
+            {error ? <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                <Text style={{ fontSize: 13, color: "red", fontWeight: "600" }}>{error}</Text>
+            </View> : <></>}
         </View>
     );
 };

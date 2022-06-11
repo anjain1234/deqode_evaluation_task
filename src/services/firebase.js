@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import auth from '@react-native-firebase/auth';
 import { Provider as ReduxProvider } from "react-redux";
-// import configureStore from '../redux/store';
 import AppNavigation from '../navigation/AppNavigation';
 import store from '../redux/store';
-
-// const store = configureStore();
+import AuthNavigation from '../navigation/AuthNavigation';
 
 const Routes = () => {
     const [initializing, setInitializing] = useState(true);
+    const [user, setUser] = useState(null);
 
-    const onAuthStateChanged = (user) => {
+    const onAuthStateChanged = (userData) => {
+        setUser(userData);
         if (initializing) setInitializing(false);
     };
 
@@ -23,7 +23,7 @@ const Routes = () => {
 
     return (
         <ReduxProvider store={store}>
-            <AppNavigation />
+            {user !== null ? <AppNavigation /> : <AuthNavigation />}
         </ReduxProvider>
     );
 };

@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import Entypo from 'react-native-vector-icons/AntDesign';
 import { COLORS } from '../services/theme';
-import CustomTextComponent from './custom_text_component';
 
 export default function CustomButton({
     text,
@@ -36,12 +35,9 @@ export default function CustomButton({
                     onPress={onPress}>
                     {icon ? <Entypo name={icon} color={iconColor} size={18} /> : <></>}
                     {icon ? <View style={{ width: 8 }} /> : <></>}
-                    <CustomTextComponent
-                        fs={fs}
-                        text={text}
-                        textColor={textColor}
-                        fw={fw}
-                    />
+                    <View style={{ alignItems: 'center' }}>
+                        <Text style={{ fontSize: fs, color: textColor, fontWeight: fw, textAlign: 'center' }}>{text}</Text>
+                    </View>
                 </TouchableOpacity>
             </View>
         );
@@ -66,12 +62,9 @@ export default function CustomButton({
                     onPress={onPress}>
                     {icon ? <Entypo name={icon} color={iconColor} size={18} /> : <></>}
                     {icon ? <View style={{ width: 8 }} /> : <></>}
-                    <CustomTextComponent
-                        fs={fs}
-                        text={text}
-                        textColor={textColor}
-                        fw={fw}
-                    />
+                    <View style={{ alignItems: 'baseline' }}>
+                        <Text style={{ fontSize: fs, color: textColor, fontWeight: fw, textAlign: 'center' }}>{text}</Text>
+                    </View>
                 </TouchableOpacity>
             </View>
         );

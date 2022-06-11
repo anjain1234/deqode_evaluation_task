@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, ImageBackground, StatusBar, ActivityIndicator, Alert } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import CustomTextComponent from '../components/custom_text_component';
+import { View, ScrollView, Text, StyleSheet, ImageBackground, StatusBar, ActivityIndicator } from 'react-native';
+import Toast from 'react-native-toast-message';
 import CustomInput from '../components/custom_input';
 import CustomButton from '../components/custom_button';
 import { COLORS } from '../services/theme';
@@ -9,6 +8,8 @@ import { windowWidth } from '../services/utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { signup } from '../redux/actions/auth_action';
+import CustomLoader from '../components/custom_loader';
+import { Panel } from './LoginScreen';
 
 function RegisterScreen({ route, navigation, signup }) {
 
@@ -21,145 +22,151 @@ function RegisterScreen({ route, navigation, signup }) {
     const [showEye, setShowEye] = useState("");
 
     const handleSubmitOnPress = () => {
+        var re = /[A-Z].*\d|\d.*[A-Z]/;
         if (name.length === 0) {
             setNameError("Name is required");
-        } if (password.length === 0) {
-            setPasswordError("Invalid Password")
         } else if (password.length < 6) {
             setPasswordError("Password must be 6 characters long")
+        } else if (!(password.includes("@")) && !(password.includes("#")) && !(password.includes("%") && !(password.includes("*")) && !(password.includes("$")) && !(password.includes("!")))) {
+            setPasswordError("Password is not strong enough it should include atleast one of '#', '@', '$', '%', '^', '!'");
+        } else if (!(re.test(password))) {
+            setPasswordError("Password should contain atleast one letter and it should be capital");
         } else {
-            // setLoading(true);
-            signup(route.params.email, password, (response) => {
-                // setLoading(false);
-                if (response === null) {
-                    navigation.navigate("HomeScreen");
+            setLoading(true);
+            signup(route.params.email, password, name, (response, data) => {
+                setLoading(false);
+                console.log("\n\n Login screen handleSubmitOnPress:", response, data)
+                if (response) {
+                    navigation.replace("Root", {
+                        email: route.params.email
+                    });
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Success',
+                        text2: "The User account has been created successfully!",
+                    });
                 } else {
-                    alert(response)
+                    if (data.code === "auth/email-already-in-use") {
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Error',
+                            text2: "The email address is already in use by another account.",
+                        });
+                    } else if (data.code === "auth/too-many-requests") {
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Error',
+                            text2: "Oops, Something went wrong",
+                        });
+                    } else {
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Error',
+                            text2: "Oops, Something went wrong",
+                        });
+                    }
                 }
             });
-            // auth()
-            //     .createUserWithEmailAndPassword(route.params.email, password)
-            //     .then(() => {
-            //         setLoading(false);
-            //         console.log('User account created & signed in!');
-            //         navigation.navigate("HomeScreen");
-            //     })
-            //     .catch(error => {
-            //         setLoading(false);
-            //         if (error.code === 'auth/email-already-in-use') {
-            //             console.log('That email address is already in use!');
-            //             Alert.alert("That email address is already in use!")
-            //         }
-
-            //         if (error.code === 'auth/invalid-email') {
-            //             console.log('That email address is invalid!');
-            //             Alert.alert("That email address is invalid!")
-            //         }
-
-            //         console.error(error);
-            //     });
         }
     }
 
     return (
-        loading
-            ? <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size={50} color={COLORS.primary} />
-            </View>
-            : <ScrollView contentContainerStyle={styles.container}>
-                <StatusBar backgroundColor="#000" barStyle='light-content' />
-                <ImageBackground
-                    source={require("../../assets/images/login-bg.png")}
-                    style={{ width: '100%', height: '100%' }}
-                >
-                    <View style={{ justifyContent: 'center', height: '100%', paddingBottom: 10 }}>
-                        <View style={{ marginTop: 100 }} />
-                        <View style={styles.header_block}>
-                            <Text style={{ fontSize: 30, color: "#fff" }}>Sign Up</Text>
-                            <View style={{ marginTop: 30 }} />
-                        </View>
-
-                        <View style={{ alignItems: 'center', paddingHorizontal: 10 }}>
-                            <View style={{ ...styles.emailInputBoxStyle }}>
-                                <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
-                                    Looks like you don't have an account.
-                                </Text>
-                                <View style={{ marginTop: 2 }} />
-                                <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
-                                    Let's create a new account for
-                                </Text>
-                                <View style={{ marginTop: 2 }} />
-                                <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
-                                    {route.params.email}
-                                </Text>
-                                <View style={{ marginTop: 5 }} />
-
-                                <View style={{ alignItems: 'center' }}>
-                                    <CustomInput
-                                        placeholderText="Name"
-                                        iconType="user"
-                                        headingText=""
-                                        autoCapitalize='none'
-                                        error={nameError}
-                                        labelValue={name}
-                                        onChangeText={(val) => {
-                                            setName(val);
-                                            setNameError("");
-                                        }}
-                                    />
-                                </View>
-
-                                <View style={{ alignItems: 'center', marginTop: -16, }}>
-                                    <CustomInput
-                                        placeholderText="Password"
-                                        iconType={showEye ? "eye" : "eyeo"}
-                                        headingText=""
-                                        error={passwordError}
-                                        secureTextEntry={showEye ? false : true}
-                                        labelValue={password}
-                                        onChangeText={(val) => {
-                                            setPassword(val);
-                                            setPasswordError("");
-                                        }}
-                                        onPress={() => { setShowEye(!showEye) }}
-                                    />
-                                </View>
-
-                                <View style={{ marginTop: 20 }} />
-                                <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
-                                    By selecting Agree and continue below,
-                                </Text>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
-                                    <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
-                                        I agree to
-                                    </Text>
-                                    <View style={{ width: 4 }} />
-                                    <TouchableOpacity>
-                                        <Text style={{ fontSize: 13, color: COLORS.seagreen, fontWeight: "600" }}>
-                                            Terms of Service and Privacy Policy
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={{ marginTop: 24 }} />
-
-                                <CustomButton
-                                    fs={16} text={"Agree and continue"} fw={"600"}
-                                    textColor={COLORS.white}
-                                    bgColor={COLORS.seagreen}
-                                    width={"100%"} height={58}
-                                    onPress={handleSubmitOnPress}
-                                />
-                                <View style={{ marginTop: 10 }} />
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: 80 }} />
+        <ScrollView contentContainerStyle={styles.container}>
+            <StatusBar backgroundColor="#000" barStyle='light-content' />
+            <ImageBackground
+                source={require("../../assets/images/login-bg.png")}
+                style={{ width: '100%', height: '100%' }}
+            >
+                <View style={{ justifyContent: 'center', height: '100%', paddingBottom: 10 }}>
+                    <View style={{ marginTop: 100 }} />
+                    <View style={styles.header_block}>
+                        <Text style={{ fontSize: 30, color: "#fff" }}>Sign Up</Text>
+                        <View style={{ marginTop: 30 }} />
                     </View>
-                </ImageBackground>
 
-            </ScrollView>
+                    <View style={{ alignItems: 'center', paddingHorizontal: 10 }}>
+                        <View style={{ ...styles.emailInputBoxStyle }}>
+                            <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
+                                Looks like you don't have an account.
+                            </Text>
+                            <View style={{ marginTop: 2 }} />
+                            <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
+                                Let's create a new account for
+                            </Text>
+                            <View style={{ marginTop: 2 }} />
+                            <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
+                                {route.params.email}
+                            </Text>
+                            <View style={{ marginTop: 5 }} />
+
+                            <View style={{ alignItems: 'center', marginTop: 16 }}>
+                                <CustomInput
+                                    placeholderText="Name"
+                                    iconType="user"
+                                    autoCapitalize='none'
+                                    error={nameError}
+                                    labelValue={name}
+                                    onChangeText={(val) => {
+                                        setName(val);
+                                        setNameError("");
+                                    }}
+                                />
+                            </View>
+
+                            <View style={{ alignItems: 'center', marginTop: 10, }}>
+                                <CustomInput
+                                    placeholderText="Password"
+                                    iconType={showEye ? "eye" : "eyeo"}
+                                    error={passwordError}
+                                    secureTextEntry={showEye ? false : true}
+                                    labelValue={password}
+                                    onChangeText={(val) => {
+                                        setPassword(val);
+                                        setPasswordError("");
+                                    }}
+                                    onPress={() => { setShowEye(!showEye) }}
+                                />
+                            </View>
+
+                            <View style={{ marginTop: 20 }} />
+                            <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
+                                By selecting Agree and continue below,
+                            </Text>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
+                                <Text style={{ fontSize: 13, color: "#fff", fontWeight: "600" }}>
+                                    I agree to
+                                </Text>
+                                <View style={{ width: 4 }} />
+                                <TouchableOpacity>
+                                    <Text style={{ fontSize: 13, color: COLORS.seagreen, fontWeight: "600" }}>
+                                        Terms of Service and Privacy Policy
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={{ marginTop: 24 }} />
+
+                            <CustomButton
+                                fs={16} text={"Agree and continue"} fw={"600"}
+                                textColor={COLORS.white}
+                                bgColor={COLORS.seagreen}
+                                width={"100%"} height={58}
+                                onPress={handleSubmitOnPress}
+                            />
+                            <View style={{ marginTop: 10 }} />
+                        </View>
+                    </View>
+
+                    <View style={{ marginTop: 80 }} />
+                </View>
+
+                <Panel loading={loading} />
+            </ImageBackground>
+
+            <CustomLoader loading={loading} />
+
+        </ScrollView>
     )
 }
 
@@ -192,13 +199,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-        userSignup: state.loginReducer.userSignup
+        userSignup: state.signupReducer.userSignup
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        signup: (email, password, callback) => { dispatch(signup(email, password, callback)) },
+        signup: (email, password, name, callback) => { dispatch(signup(email, password, name, callback)) },
     }
 }
 
