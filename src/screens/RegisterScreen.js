@@ -21,6 +21,41 @@ function RegisterScreen({ route, navigation, signup }) {
     const [password, setPassword] = useState("");
     const [showEye, setShowEye] = useState("");
 
+    const signupCallBack = ((response, data) => {
+        setLoading(false);
+        console.log("\n\n Login screen handleSubmitOnPress:", response, data)
+        if (response) {
+            navigation.replace("Root", {
+                email: route.params.email
+            });
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: "The User account has been created successfully!",
+            });
+        } else {
+            if (data.code === "auth/email-already-in-use") {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Error',
+                    text2: "The email address is already in use by another account.",
+                });
+            } else if (data.code === "auth/too-many-requests") {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Error',
+                    text2: "Oops, Something went wrong",
+                });
+            } else {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Error',
+                    text2: "Oops, Something went wrong",
+                });
+            }
+        }
+    }, [route, name, password])
+
     const handleSubmitOnPress = () => {
         var re = /[A-Z].*\d|\d.*[A-Z]/;
         if (name.length === 0) {
@@ -33,40 +68,7 @@ function RegisterScreen({ route, navigation, signup }) {
             setPasswordError("Password should contain atleast one letter and it should be capital");
         } else {
             setLoading(true);
-            signup(route.params.email, password, name, (response, data) => {
-                setLoading(false);
-                console.log("\n\n Login screen handleSubmitOnPress:", response, data)
-                if (response) {
-                    navigation.replace("Root", {
-                        email: route.params.email
-                    });
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Success',
-                        text2: "The User account has been created successfully!",
-                    });
-                } else {
-                    if (data.code === "auth/email-already-in-use") {
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Error',
-                            text2: "The email address is already in use by another account.",
-                        });
-                    } else if (data.code === "auth/too-many-requests") {
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Error',
-                            text2: "Oops, Something went wrong",
-                        });
-                    } else {
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Error',
-                            text2: "Oops, Something went wrong",
-                        });
-                    }
-                }
-            });
+            signup(route.params.email, password, name, signupCallBack);
         }
     }
 

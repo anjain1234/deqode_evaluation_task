@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { COLORS } from '../services/theme'
 import { windowWidth } from "../services/utils"
@@ -26,19 +26,20 @@ function ProfileScreen({ logout, fetchProfileDataFromFirestore }) {
         return subscriber;
     }, []);
 
+    const fetchProfileDataCallBack = useCallback((response, data) => {
+        if (response) {
+            setUserData(data.data());
+        }
+    }, [userData])
+
     useEffect(() => {
-        fetchProfileDataFromFirestore(user?.uid, (response, data) => {
-            if (response) {
-                setUserData(data.data());
-            }
-        });
-    }, []);
+        fetchProfileDataFromFirestore(user?.uid, fetchProfileDataCallBack);
+    }, [userData]);
 
     const handleLogout = () => {
         setLoading(true);
         logout((response, data) => {
             setLoading(false);
-            console.log("\n\n Logout screen handleLogout:", response, data.code)
             if (response) {
                 navigation.replace("EmailInputScreen", {
                     email: route.params.email
@@ -73,8 +74,8 @@ function ProfileScreen({ logout, fetchProfileDataFromFirestore }) {
                 />
 
                 <Text />
-                <Text style={{ fontSize: 24, color: '#000' }}>{userData.fullName}</Text>
-                <Text style={{ fontSize: 18, color: '#000' }}>{userData.email}</Text>
+                <Text style={{ fontSize: 24, color: '#000' }}>{userData?.fullName}</Text>
+                <Text style={{ fontSize: 18, color: '#000' }}>{userData?.email}</Text>
 
                 <TouchableOpacity style={{ ...styles.logoutBtn }} onPress={handleLogout}>
                     <Text style={{ fontSize: 16, color: '#fff' }}>Logout</Text>

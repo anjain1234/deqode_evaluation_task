@@ -9,7 +9,7 @@ export const emailFound = (email, callback) => async dispatch => {
         auth()
             .fetchSignInMethodsForEmail(email)
             .then((emailData) => {
-                dispatch({ type: EMAIL_FOUND_SUCCESS });
+                dispatch({ type: EMAIL_FOUND_SUCCESS, payload: emailData });
                 callback(true, emailData);
             })
             .catch((error) => {
@@ -26,13 +26,13 @@ export const emailFound = (email, callback) => async dispatch => {
 };
 
 export const signin = (email, password, callback) => async dispatch => {
-    console.log("\n\n signin called...")
+    console.log("\n\n signin called...", email, password)
     try {
         auth()
             .signInWithEmailAndPassword(email, password)
             .then((signInResponse) => {
                 console.log("\n\n signin success...")
-                dispatch({ type: LOGIN_SUCCESS });
+                dispatch({ type: LOGIN_SUCCESS, payload: signInResponse });
                 callback(true, signInResponse);
             })
             .catch((error) => {
@@ -54,7 +54,7 @@ export const signup = (email, password, name, callback) => async dispatch => {
         auth()
             .createUserWithEmailAndPassword(email, password)
             .then(dataBeforeEmail => {
-                dispatch({ type: SIGNUP_SUCCESS });
+                dispatch({ type: SIGNUP_SUCCESS, payload: dataBeforeEmail });
                 firestore().collection('users').doc(dataBeforeEmail.user.uid).set({
                     fullName: name,
                     email: email,
@@ -95,6 +95,7 @@ export const logout = (callback) => (dispatch) => {
             if (response.status === "success") {
                 dispatch({
                     type: LOGOUT,
+                    payload: "User logged out successfully!"
                 });
                 callback(true, response);
                 Promise.resolve();

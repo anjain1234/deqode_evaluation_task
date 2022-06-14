@@ -16,7 +16,7 @@ export default function AppNavigation() {
     return (
         <>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="EmailInputScreen"
+                <Stack.Navigator initialRouteName="Root"
                     screenOptions={screenOptions}
                 >
                     <Stack.Screen name="Root" component={BottomTabs} />

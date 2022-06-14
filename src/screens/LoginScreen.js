@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, ScrollView, ImageBackground, StyleSheet, TouchableHighlight, StatusBar, Image, Text } from 'react-native';
 import Toast from 'react-native-toast-message';
 import CustomInput from '../components/custom_input';
@@ -17,6 +17,43 @@ function LoginScreen({ route, navigation, signin }) {
     const [password, setPassword] = useState("");
     const [showEye, setShowEye] = useState("");
 
+    console.log("LoginScreen route.params.email: ", route.params.email)
+
+    const signinCallBack = useCallback((response, data) => {
+        setLoading(false);
+        console.log("\n\n Login screen handleSubmitOnPress:", password, response, data.code)
+        if (response) {
+            navigation.replace("Root", {
+                email: route.params.email
+            });
+            Toast.show({
+                type: 'success',
+                text1: 'Success',
+                text2: "User has been logged in successfully!",
+            });
+        } else {
+            if (data.code === "auth/wrong-password") {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Error',
+                    text2: "The password is invalid or the user does not have a password.",
+                });
+            } else if (data.code === "auth/too-many-requests") {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Error',
+                    text2: "Oops, Something went wrong",
+                });
+            } else {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Error',
+                    text2: "Oops, Something went wrong",
+                });
+            }
+        }
+    }, [password, route])
+
     const handleSubmitOnPress = () => {
         var re = /[A-Z].*\d|\d.*[A-Z]/;
         if (password.length === 0) {
@@ -29,40 +66,7 @@ function LoginScreen({ route, navigation, signin }) {
             setPasswordError("Password should contain atleast one letter and it should be capital");
         } else {
             setLoading(true);
-            signin(route.params.email, password, (response, data) => {
-                setLoading(false);
-                console.log("\n\n Login screen handleSubmitOnPress:", response, data.code)
-                if (response) {
-                    navigation.replace("Root", {
-                        email: route.params.email
-                    });
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Success',
-                        text2: "User has been logged in successfully!",
-                    });
-                } else {
-                    if (data.code === "auth/wrong-password") {
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Error',
-                            text2: "The password is invalid or the user does not have a password.",
-                        });
-                    } else if (data.code === "auth/too-many-requests") {
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Error',
-                            text2: "Oops, Something went wrong",
-                        });
-                    } else {
-                        Toast.show({
-                            type: 'success',
-                            text1: 'Error',
-                            text2: "Oops, Something went wrong",
-                        });
-                    }
-                }
-            });
+            signin(route.params.email, password, signinCallBack);
         }
     }
 

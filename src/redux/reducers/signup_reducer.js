@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SIGNUP_ERROR, SIGNUP_SUCCESS } from "../action_types/signup_action_types";
 
-const initialState = { isLoading: false, user: null };
+const initialState = { isLoading: false, userData: null };
 
 export default signup_reducer = (state = initialState, action) => {
     const { type, payload } = action;
@@ -10,13 +10,13 @@ export default signup_reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
-                user: payload,
+                userData: payload,
             };
         case SIGNUP_ERROR:
             return {
                 ...state,
                 isLoading: false,
-                user: null,
+                userData: null,
             };
         default:
             return state;

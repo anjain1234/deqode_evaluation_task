@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, ImageBackground, StatusBar, ActivityIndicator } from 'react-native';
 import CustomInput from '../components/custom_input';
 import CustomButton from '../components/custom_button';
@@ -17,6 +17,28 @@ function EmailInputScreen({ navigation, emailFound }) {
 
     const [email, setEmail] = useState("");
 
+    var emailFoundCallBack = useCallback((response, data) => {
+        setLoading(false);
+        console.log("\n\n Email input screen handleSubmitOnPress:", response, data)
+        if (response) {
+            if (data.length === 0) {
+                navigation.navigate("RegisterScreen", {
+                    email: email
+                });
+            } else {
+                navigation.navigate("LoginScreen", {
+                    email: email
+                });
+            }
+        } else {
+            Toast.show({
+                type: 'success',
+                text1: 'Error',
+                text2: data,
+            });
+        }
+    }, [email])
+
     const handleSubmitOnPress = () => {
         if (email.length === 0) {
             setEmailError("Email is required");
@@ -24,40 +46,7 @@ function EmailInputScreen({ navigation, emailFound }) {
             setEmailError("Invalid Email");
         } else {
             setLoading(true);
-            emailFound(email, (response, data) => {
-                setLoading(false);
-                console.log("\n\n Email input screen handleSubmitOnPress:", response, data)
-                if (response) {
-                    if (data.length === 0) {
-                        navigation.navigate("RegisterScreen", {
-                            email: email
-                        });
-                    } else {
-                        navigation.navigate("LoginScreen", {
-                            email: email
-                        });
-                    }
-                } else {
-                    Toast.show({
-                        type: 'success',
-                        text1: 'Error',
-                        text2: data,
-                    });
-                }
-                // if (response.code === 'auth/email-already-in-use') {
-                //     console.log('That email address is already in use!');
-                //     Alert.alert("That email address is already in use!")
-                // }
-
-                // if (response.code === 'auth/invalid-email') {
-                //     console.log('That email address is invalid!');
-                //     Alert.alert("That email address is invalid!")
-                // }
-                // if (response.code === 'auth/user-not-found') {
-                //     console.log('That email address is invalid!');
-                //     Alert.alert("auth/user-not-found")
-                // }
-            });
+            emailFound(email, emailFoundCallBack);
         }
     }
 
