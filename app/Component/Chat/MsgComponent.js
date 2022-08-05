@@ -1,16 +1,14 @@
-// import moment from 'moment';
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../Constant/Color';
 import { FONTS } from '../Constant/Font';
 import TimeDelivery from './TimeDelivery';
 
 const MsgComponent = (props) => {
-    const { sender, massage, item, sendTime } = props;
+    const { sender, item, sendTime } = props;
+
     return (
-        <Pressable
-            style={{ marginVertical: 0 }}
-        >
+        <>
             <View
                 style={[styles.TriangleShapeCSS,
                 sender ?
@@ -22,28 +20,28 @@ const MsgComponent = (props) => {
             <View
                 style={[styles.masBox, {
                     alignSelf: sender ? 'flex-end' : 'flex-start',
-                    // borderWidth:1,
-                    backgroundColor: sender ? COLORS.theme : COLORS.white
+                    backgroundColor: sender ? COLORS.theme : COLORS.white,
                 }]}
             >
-
-                <Text style={{ paddingLeft: 5, color:  sender ? COLORS.white : COLORS.black,fontFamily:FONTS.Regular,fontSize:12.5 }}>
-                    {item.massage}
+                <Text style={{ ...styles.messageStyle, color: sender ? COLORS.white : COLORS.black }}>
+                    {item.message}
                 </Text>
 
                 <TimeDelivery
                     sender={sender}
                     item={item}
                 />
-
-                
-
             </View>
-        </Pressable>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
+    messageStyle: {
+        paddingLeft: 5,
+        fontFamily: FONTS.Regular,
+        fontSize: 12.5,
+    },
     masBox: {
         alignSelf: 'flex-end',
         marginHorizontal: 10,
@@ -64,7 +62,6 @@ const styles = StyleSheet.create({
         width: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: COLORS.white,
         borderRadius: 30,
         marginTop: 10
     },
@@ -74,14 +71,11 @@ const styles = StyleSheet.create({
         borderRadius: 21,
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: COLORS.themecolor,
     },
     TriangleShapeCSS: {
         position: 'absolute',
-        // top: -3,
         width: 0,
         height: 0,
-        // borderBottomLeftRadius:5,
         backgroundColor: 'transparent',
         borderStyle: 'solid',
         borderLeftWidth: 15,
@@ -89,7 +83,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 20,
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
-        // borderBottomColor: '#757474'
     },
     left: {
         borderBottomColor: COLORS.white,
@@ -100,7 +93,6 @@ const styles = StyleSheet.create({
     right: {
         borderBottomColor: COLORS.theme,
         right: 2,
-        // top:0,
         bottom: 5,
         transform: [{ rotate: '103deg' }]
     },

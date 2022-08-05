@@ -92,6 +92,7 @@ function Login() {
                       style={styles.inputs}
                       placeholder="Enter Email Id"
                       keyboardType="email-address"
+                      autoCapitalize="none"
                       underlineColorAndroid="transparent"
                       onChangeText={value => {
                         setEmail(value);

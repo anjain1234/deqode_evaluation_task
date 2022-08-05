@@ -1,11 +1,14 @@
-import { Container, Icon } from 'native-base';
-import React from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { COLORS } from '../../Component/Constant/Color';
 import { FONTS } from '../../Component/Constant/Font';
 import HomeHeader from '../../Component/Header/HomeHeader';
 import Navigation from '../../Service/Navigation';
+import { useSelector } from 'react-redux';
+import database from '@react-native-firebase/database';
 
 const listData = [
   {
@@ -71,37 +74,67 @@ const listData = [
 ];
 
 const Home = () => {
-  const renderItem = ({ item }) => (
-    <ListItem
-      // bottomDivider 
-      // activeOpacity={1}
-      containerStyle={{ paddingVertical: 8, marginVertical: 0 }}
-      onPress={() => Navigation.navigate('SingleChat', { data: item })}>
-      <Avatar
-        source={{ uri: item.avatar_url }}
-        rounded
-        title={item.name}
-        size="medium" />
-      <ListItem.Content>
-        <ListItem.Title style={{ fontFamily: FONTS.Medium, fontSize: 14 }}>
-          {item.name}
-        </ListItem.Title>
-        <ListItem.Subtitle
-          style={{ fontFamily: FONTS.Regular, fontSize: 12 }} numberOfLines={1}>
-          {item.subtitle}
-        </ListItem.Subtitle>
-      </ListItem.Content>
-    </ListItem>
-  );
+
+  const { userData } = useSelector(state => state.User);
+
+  const [chatList, setChatList] = useState([]);
+
+  useEffect(() => {
+    getChatList();
+  }, [])
+
+  const getChatList = () => {
+    database()
+      .ref('/chatlist/' + userData?.id)
+      .on('value', snapshot => {
+        if (snapshot?.val() != null) {
+          console.log("User data: ", Object.values(snapshot?.val()));
+          setChatList(Object.values(snapshot?.val()))
+        }
+      })
+  }
+
+  const renderItem = ({ item }) => {
+    console.log("\n\n \n\n item last msg: ", item.lastMsg.length)
+    return (
+      <ListItem
+        containerStyle={{ paddingVertical: 8, marginVertical: 0 }}
+        onPress={() => Navigation.navigate('SingleChat', { data: item })}>
+        <Avatar
+          source={{ uri: item.img }}
+          rounded
+          title={item.name}
+          size="medium" />
+        <ListItem.Content>
+          <ListItem.Title style={{ fontFamily: FONTS.Medium, fontSize: 14 }}>
+            {item.name}
+          </ListItem.Title>
+          {item.lastMsg.length === 0
+            ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons
+                style={{ color: COLORS.black, marginRight: 4 }}
+                name="image" type="Ionicons" size={22}
+              />
+              <ListItem.Subtitle style={{ fontFamily: FONTS.Regular, fontSize: 12 }} numberOfLines={1}>
+                Photo
+              </ListItem.Subtitle>
+            </View>
+            : <ListItem.Subtitle style={{ fontFamily: FONTS.Regular, fontSize: 12 }} numberOfLines={1}>
+              {item.lastMsg}
+            </ListItem.Subtitle>}
+        </ListItem.Content>
+      </ListItem>
+    )
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
-      <HomeHeader />
+      <HomeHeader userData={userData} />
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        data={listData}
+        data={chatList}
         renderItem={renderItem}
       />
       <TouchableOpacity

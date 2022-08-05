@@ -1,10 +1,14 @@
-import {Container} from 'native-base';
-import React, { useState } from 'react';
-import { FlatList, StatusBar, StyleSheet } from 'react-native';
-import {ListItem, Avatar} from 'react-native-elements';
+import { Container } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { FlatList, StatusBar, StyleSheet, View } from 'react-native';
+import { ListItem, Avatar } from 'react-native-elements';
 import SearchBar from 'react-native-elements/dist/searchbar/SearchBar-ios';
-import {COLORS} from '../../Component/Constant/Color';
+import { COLORS } from '../../Component/Constant/Color';
 import { FONTS } from '../../Component/Constant/Font';
+import database from '@react-native-firebase/database';
+import { useSelector } from 'react-redux';
+import Navigation from '../../Service/Navigation';
+import uuid from 'react-native-uuid';
 
 const listData = [
   {
@@ -29,7 +33,8 @@ const listData = [
     name: 'Tom Holland',
     avatar_url:
       'https://static.toiimg.com/thumb.cms?msid=80482429&height=600&width=600',
-    subtitle: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+    subtitle:
+      'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
   },
   {
     name: 'Robert',
@@ -53,7 +58,8 @@ const listData = [
     name: 'Chris Jackson',
     avatar_url:
       'https://images.pexels.com/photos/3748221/pexels-photo-3748221.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-    subtitle: ' If you use this site regularly and would like to help keep the site',
+    subtitle:
+      ' If you use this site regularly and would like to help keep the site',
   },
   {
     name: 'Jenifar Lawrence',
@@ -65,56 +71,140 @@ const listData = [
     name: 'Tom Holland',
     avatar_url:
       'https://static.toiimg.com/thumb.cms?msid=80482429&height=600&width=600',
-    subtitle: ' If you use this site regularly and would like to help keep the site',
+    subtitle:
+      ' If you use this site regularly and would like to help keep the site',
   },
 ];
 
 const AllUser = () => {
 
-  const [search, setsearch] = useState('')  
+  const { userData } = useSelector(state => state.User);
 
-  const renderItem = ({item}) => (
-    <ListItem bottomDivider containerStyle={{paddingVertical:7,marginVertical:2}}>
-      <Avatar 
-      source={{uri: item.avatar_url}} 
-      rounded
-      title={item.name}
-      size="medium" />
-      <ListItem.Content>
-        <ListItem.Title style={{fontFamily:FONTS.Medium,fontSize:14}}>
-           {item.name}
-        </ListItem.Title>
-        <ListItem.Subtitle 
-        style={{fontFamily:FONTS.Regular,fontSize:12}}  numberOfLines={1}>
-          {item.subtitle}
-        </ListItem.Subtitle>
-      </ListItem.Content>
-    </ListItem>
-  );
+  const [search, setsearch] = useState('');
+  const [allUser, setAllUser] = useState([]);
+  const [allUserBackup, setAllUserBackup] = useState([]);
+
+  useEffect(() => {
+    getAllUsers();
+  }, [])
+
+  const getAllUsers = () => {
+    database()
+      .ref("/users/")
+      .once('value')
+      .then(snapshot => {
+        setAllUser(Object.values(snapshot.val()).filter((it) => it.id !== userData))
+        setAllUserBackup(Object.values(snapshot.val()).filter((it) => it.id !== userData))
+      });
+  }
+
+  const searchUser = (val) => {
+    setsearch(val);
+    setAllUser(allUserBackup.filter((it) => it.name.match(val)))
+  }
+
+  const createChatList = (data) => {
+    database()
+      .ref('/chatlist/' + userData.id + "/" + data.id)
+      .once('value')
+      .then(snapshot => {
+        console.log("\n\n \n\n User Datassss: ", snapshot.val());
+        if (snapshot.val() === null) {
+          let roomId = uuid.v4();
+          let mydata = {
+            roomId,
+            id: userData.id,
+            name: userData?.name,
+            img: userData?.img,
+            emailId: userData?.emailId,
+            lastMsg: "",
+          }
+
+          database()
+            .ref("/chatlist/" + data?.id + "/" + userData?.id)
+            .update(mydata)
+            .then(() => console.log("Data updated."));
+
+          delete data["password"]
+          data.lastMsg = "";
+          data.roomId = roomId;
+
+          database()
+            .ref("/chatlist/" + userData?.id + "/" + data?.id)
+            .update(data)
+            .then(() => console.log("Data updated."));
+
+          Navigation.navigate("SingleChat", { data: data });
+        } else {
+          Navigation.navigate("SingleChat", { data: snapshot.val() });
+        }
+      });
+  }
+
+  const renderItem = ({ item }) => {
+    if (userData.emailId === item.emailId) {
+      return;
+    }
+    return (
+      <ListItem
+        bottomDivider
+        onPress={() => createChatList(item)}
+        containerStyle={{ paddingVertical: 7, marginVertical: 2 }}>
+        <Avatar
+          source={{ uri: item.img }}
+          rounded
+          title={item.name}
+          size="medium"
+        />
+        <ListItem.Content>
+          <ListItem.Title style={{ fontFamily: FONTS.Medium, fontSize: 14 }}>
+            {item.name}
+          </ListItem.Title>
+          <ListItem.Subtitle
+            style={{ fontFamily: FONTS.Regular, fontSize: 12 }}
+            numberOfLines={1}>
+            {item.emailId}
+            {/* {"Hey there, how are you?"} */}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem>
+    );
+  }
 
   return (
-    <Container style={{flex: 1, backgroundColor: COLORS.white}}>
+    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
-       <SearchBar
+      <SearchBar
         placeholder="Search by name..."
-        onChangeText={(val)=>setsearch(val)}
+        placeholderTextColor="#999"
+        onChangeText={searchUser}
         value={search}
         containerStyle={styles.searchContainer}
         inputStyle={styles.searchInput}
-       />
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        data={listData}
+        data={allUser}
         renderItem={renderItem}
       />
-    </Container>
+    </View>
   );
 };
 
 export default AllUser;
 
 const styles = StyleSheet.create({
-  searchContainer : {elevation:2,backgroundColor:COLORS.white,paddingHorizontal:10},
-  searchInput : {fontSize:15,fontFamily:FONTS.Regular,color:COLORS.black,opacity:.7}
+  searchContainer: {
+    elevation: 2,
+    backgroundColor: COLORS.white,
+    paddingHorizontal: 10,
+  },
+  searchInput: {
+    fontSize: 15,
+    fontFamily: FONTS.Regular,
+    color: COLORS.black,
+    opacity: 0.7,
+
+  },
 });

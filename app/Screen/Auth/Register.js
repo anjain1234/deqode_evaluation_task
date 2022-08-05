@@ -35,6 +35,7 @@ function Register() {
       name: name,
       emailId: email,
       password: pass,
+      img: "https://images.pexels.com/photos/2811087/pexels-photo-2811087.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
     database()
       .ref('/users/' + data.id)
@@ -98,6 +99,8 @@ function Register() {
                       style={styles.inputs}
                       placeholder="Enter Email Id"
                       underlineColorAndroid="transparent"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
                       onChangeText={value => setemail(value)}
                       value={email}
                       placeholderTextColor={COLORS.liteBlack}
