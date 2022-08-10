@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import AppStack from './app/Navigation/AppStack';
-import AuthStack from './app/Navigation/AuthStack';
-import { COLORS } from './app/Component/Constant/Color';
-import Navigation from './app/Service/Navigation';
+import AppStack from './app/navigation/AppStack';
+import AuthStack from './app/navigation/AuthStack';
+import { COLORS } from './app/component/Constant/Color';
+import Navigation from './app/service/Navigation';
 import { NativeBaseProvider } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
-import Auth from './app/Service/Auth';
-import { setUser } from './app/Redux/reducer/user';
+import Auth from './app/service/Auth';
+import { setUser } from './app/redux/reducer/user';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +26,6 @@ export default function App() {
 
   const getUser = async () => {
     let data = await Auth.getAccount();
-    console.log('data fetched: ', data);
     if (data !== null) {
       dispatch(setUser(data));
       setLoginChk(false);

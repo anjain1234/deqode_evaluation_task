@@ -17,11 +17,8 @@ function LoginScreen({ route, navigation, signin }) {
     const [password, setPassword] = useState("");
     const [showEye, setShowEye] = useState("");
 
-    console.log("LoginScreen route.params.email: ", route.params.email)
-
     const signinCallBack = useCallback((response, data) => {
         setLoading(false);
-        console.log("\n\n Login screen handleSubmitOnPress:", password, response, data.code)
         if (response) {
             navigation.replace("Root", {
                 email: route.params.email

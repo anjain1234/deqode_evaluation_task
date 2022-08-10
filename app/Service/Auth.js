@@ -1,4 +1,4 @@
-import Storage from '../Utils/Storage';
+import Storage from '../utils/Storage';
 
 async function getAccount() {
     return await Storage.get('account');

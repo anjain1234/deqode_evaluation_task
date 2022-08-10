@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { Card } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { COLORS } from '../../Component/Constant/Color';
-import { FONTS } from '../../Component/Constant/Font';
-import Navigation from '../../Service/Navigation';
+import { COLORS } from '../../component/Constant/Color';
+import { FONTS } from '../../component/Constant/Font';
+import Navigation from '../../service/Navigation';
 import uuid from 'react-native-uuid';
 import Toast from 'react-native-simple-toast';
 import database from '@react-native-firebase/database';
@@ -48,18 +49,18 @@ function Register() {
         Navigation.navigate("Login")
       })
       .catch((error) => {
-        console.log("Errorrrrrrrrrrrrrrrrrrr", error)
+        Toast.show("Something went wrong!")
       })
   }
 
   return (
-    <>
+    <ScrollView>
       <StatusBar
         backgroundColor={COLORS.theme}
         barStyle="light-content"
         hidden={false}
       />
-      <View style={{ justifyContent: "space-between", height: "95%" }}>
+      <ScrollView contentContainerStyle={{ justifyContent: "space-between", height: "100%" }}>
         <View style={styles.uppercard}>
           <Text
             style={{
@@ -70,7 +71,7 @@ function Register() {
             WELCOME
           </Text>
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', height: 3 * height / 4, }}>
           <Card
             style={{
               backgroundColor: '#fff',
@@ -122,7 +123,6 @@ function Register() {
 
                   <TouchableOpacity
                     style={styles.btn}
-                    // onPress={() => Navigation.navigate('AppStack')}
                     onPress={registerUser}
                   >
                     <Text style={styles.btnText}>Register Now</Text>
@@ -144,8 +144,8 @@ function Register() {
             </KeyboardAwareScrollView>
           </Card>
         </View>
-      </View>
-    </>
+      </ScrollView>
+    </ScrollView>
   );
 }
 
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   inputs: {
     borderBottomColor: COLORS.white,
     flex: 1,
-    color: COLORS.liteBlack,
+    color: "#000",
     paddingLeft: 10,
     fontFamily: FONTS.Regular,
     paddingLeft: 20

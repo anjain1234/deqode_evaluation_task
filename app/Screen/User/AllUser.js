@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, StatusBar, StyleSheet, View } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import SearchBar from 'react-native-elements/dist/searchbar/SearchBar-ios';
-import { COLORS } from '../../Component/Constant/Color';
-import { FONTS } from '../../Component/Constant/Font';
+import { COLORS } from '../../component/Constant/Color';
+import { FONTS } from '../../component/Constant/Font';
 import database from '@react-native-firebase/database';
 import { useSelector } from 'react-redux';
-import Navigation from '../../Service/Navigation';
+import Navigation from '../../service/Navigation';
 import uuid from 'react-native-uuid';
+import SimpleToast from 'react-native-simple-toast';
 
 const listData = [
   {
@@ -108,7 +109,6 @@ const AllUser = () => {
       .ref('/chatlist/' + userData.id + "/" + data.id)
       .once('value')
       .then(snapshot => {
-        console.log("\n\n \n\n User Datassss: ", snapshot.val());
         if (snapshot.val() === null) {
           let roomId = uuid.v4();
           let mydata = {
@@ -123,7 +123,7 @@ const AllUser = () => {
           database()
             .ref("/chatlist/" + data?.id + "/" + userData?.id)
             .update(mydata)
-            .then(() => console.log("Data updated."));
+            .then(() => { Toast.show("Data Updated.") });
 
           delete data["password"]
           data.lastMsg = "";
@@ -132,7 +132,7 @@ const AllUser = () => {
           database()
             .ref("/chatlist/" + userData?.id + "/" + data?.id)
             .update(data)
-            .then(() => console.log("Data updated."));
+            .then(() => { Toast.show("Data Updated.") });
 
           Navigation.navigate("SingleChat", { data: data });
         } else {

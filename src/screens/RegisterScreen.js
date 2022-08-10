@@ -23,7 +23,6 @@ function RegisterScreen({ route, navigation, signup }) {
 
     const signupCallBack = ((response, data) => {
         setLoading(false);
-        console.log("\n\n Login screen handleSubmitOnPress:", response, data)
         if (response) {
             navigation.replace("Root", {
                 email: route.params.email

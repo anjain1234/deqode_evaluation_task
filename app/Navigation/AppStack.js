@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { COLORS } from '../Component/Constant/Color';
-import Home from '../Screen/Home';
-import AllUser from '../Screen/User/AllUser';
-import SingleChat from '../Screen/Home/SingleChat';
+import { COLORS } from '../component/Constant/Color';
+import Home from '../screen/home';
+import AllUser from '../screen/user/AllUser';
+import SingleChat from '../screen/home/SingleChat';
 const Stack = createStackNavigator();
 
 export default function AuthStack() {

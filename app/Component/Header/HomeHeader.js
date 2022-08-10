@@ -4,9 +4,9 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar'
 import { COLORS } from '../Constant/Color'
 import { FONTS } from '../Constant/Font'
-import Auth from '../../Service/Auth'
+import Auth from '../../service/Auth'
 import { useDispatch } from 'react-redux'
-import { removeUser } from '../../Redux/reducer/user'
+import { removeUser } from '../../redux/reducer/user'
 
 const HomeHeader = ({ userData }) => {
 

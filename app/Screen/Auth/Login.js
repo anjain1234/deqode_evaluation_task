@@ -7,17 +7,18 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { Card } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { COLORS } from '../../Component/Constant/Color';
-import { FONTS } from '../../Component/Constant/Font';
-import Navigation from '../../Service/Navigation';
+import { COLORS } from '../../component/Constant/Color';
+import { FONTS } from '../../component/Constant/Font';
+import Navigation from '../../service/Navigation';
 import Toast from 'react-native-simple-toast';
 import database from '@react-native-firebase/database';
 import { useDispatch } from 'react-redux';
-import Auth from '../../Service/Auth';
-import { setUser } from '../../Redux/reducer/user';
+import Auth from '../../service/Auth';
+import { setUser } from '../../redux/reducer/user';
 
 const { width, height } = Dimensions.get('window');
 
@@ -46,7 +47,6 @@ function Login() {
           Toast.show("Invalid Password");
           return false;
         }
-        console.log("User data: ", userData);
         dispatch(setUser(userData));
         await Auth.setAccount(userData);
         Toast.show("Login Successfully!");
@@ -54,13 +54,13 @@ function Login() {
   }
 
   return (
-    <>
+    <ScrollView>
       <StatusBar
         backgroundColor={COLORS.theme}
         barStyle="light-content"
         hidden={false}
       />
-      <View style={{ justifyContent: "space-between", height: "95%" }}>
+      <ScrollView contentContainerStyle={{ justifyContent: "space-between", height: "100%" }}>
         <View style={styles.uppercard}>
           <Text
             style={{
@@ -71,7 +71,7 @@ function Login() {
             Welcome
           </Text>
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', height: 3 * height / 4, }}>
           <Card
             style={{
               backgroundColor: '#fff',
@@ -80,7 +80,7 @@ function Login() {
               marginHorizontal: 18
             }}>
             <View style={styles.cardView}>
-              <View style={{}}>
+              <View>
                 <Text style={styles.Login}>Login</Text>
                 <Text /><Text />
                 <KeyboardAwareScrollView
@@ -121,7 +121,6 @@ function Login() {
                 <TouchableOpacity
                   style={styles.btn}
                   onPress={loginUser}
-                // onPress={() => Navigation.navigate('AppStack')}
                 >
                   <Text style={styles.btnText}>Login Now</Text>
                 </TouchableOpacity>
@@ -140,8 +139,8 @@ function Login() {
             </View>
           </Card>
         </View>
-      </View>
-    </>
+      </ScrollView>
+    </ScrollView>
   );
 }
 
@@ -187,7 +186,7 @@ const styles = StyleSheet.create({
   inputs: {
     borderBottomColor: COLORS.white,
     flex: 1,
-    color: COLORS.liteBlack,
+    color: "#000",
     paddingLeft: 10,
     fontFamily: FONTS.Regular,
     paddingLeft: 20

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { COLORS } from '../Constant/Color';
 import { FONTS } from '../Constant/Font';
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
-import Navigation from '../../Service/Navigation';
+import Navigation from '../../service/Navigation';
 
 const ChatHeader = (props) => {
     const { data } = props;

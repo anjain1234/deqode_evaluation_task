@@ -17,7 +17,6 @@ export const emailFound = (email, callback) => async dispatch => {
                     type: EMAIL_FOUND_ERROR,
                     payload: "Invalid login credentials"
                 });
-                console.log("\n\n \n\n emailFound", error)
                 callback(false, error)
             });
     } catch (err) {
@@ -26,17 +25,14 @@ export const emailFound = (email, callback) => async dispatch => {
 };
 
 export const signin = (email, password, callback) => async dispatch => {
-    console.log("\n\n signin called...", email, password)
     try {
         auth()
             .signInWithEmailAndPassword(email, password)
             .then((signInResponse) => {
-                console.log("\n\n signin success...")
                 dispatch({ type: LOGIN_SUCCESS, payload: signInResponse });
                 callback(true, signInResponse);
             })
             .catch((error) => {
-                console.log("\n\n signin failed...", error)
                 dispatch({
                     type: LOGIN_ERROR,
                     payload: "Invalid login credentials"

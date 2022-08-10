@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-simple-toast";
 
 async function get(Key, defaultValue = null) {
     try {
@@ -10,7 +11,7 @@ async function get(Key, defaultValue = null) {
 
         return value;
     } catch (error) {
-        console.log('Could not save data: ' + Key, error);
+        Toast.show("Could not save data!")
     }
 }
 
@@ -18,7 +19,7 @@ async function set(Key, value) {
     try {
         return await AsyncStorage.setItem(Key, JSON.stringify(value));
     } catch (error) {
-        console.log('Could not save data: ' + Key, error);
+        Toast.show("Could not save data!")
     }
 }
 
@@ -27,10 +28,10 @@ async function remove(Key) { }
 async function clear() {
     try {
         return await AsyncStorage.clear(() => {
-            console.log("Cleared");
+            Toast.show("Data Cleared.")
         })
     } catch (error) {
-        console.log("Could not clear data", error);
+        Toast.show("Could not clear data")
     }
 }
 

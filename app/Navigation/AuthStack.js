@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { COLORS } from '../Component/Constant/Color';
-import Login from '../Screen/Auth/Login';
-import Register from '../Screen/Auth/Register';
+import { COLORS } from '../component/Constant/Color';
+import Login from '../screen/auth/Login';
+import Register from '../screen/auth/Register';
 
 const Stack = createStackNavigator();
 

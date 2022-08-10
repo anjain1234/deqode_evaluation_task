@@ -19,7 +19,6 @@ function EmailInputScreen({ navigation, emailFound }) {
 
     var emailFoundCallBack = useCallback((response, data) => {
         setLoading(false);
-        console.log("\n\n Email input screen handleSubmitOnPress:", response, data)
         if (response) {
             if (data.length === 0) {
                 navigation.navigate("RegisterScreen", {
