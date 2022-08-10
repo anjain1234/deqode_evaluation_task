@@ -8,6 +8,7 @@ import database from '@react-native-firebase/database';
 import { useSelector } from 'react-redux';
 import Navigation from '../../service/Navigation';
 import uuid from 'react-native-uuid';
+import TextStrings from '../../utils/TextStrings';
 
 const AllUser = () => {
 
@@ -106,7 +107,7 @@ const AllUser = () => {
     <View style={styles.containerWrapper}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
       <SearchBar
-        placeholder="Search by name..."
+        placeholder={TextStrings.SEARCH_BY_NAME}
         placeholderTextColor="#999"
         onChangeText={searchUser}
         value={search}

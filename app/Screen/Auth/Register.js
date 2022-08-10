@@ -14,6 +14,7 @@ import Navigation from '../../service/Navigation';
 import uuid from 'react-native-uuid';
 import Toast from 'react-native-simple-toast';
 import { commonStyles } from '../../utils/Styles';
+import TextStrings from '../../utils/TextStrings';
 
 function Register() {
 
@@ -58,7 +59,7 @@ function Register() {
       <ScrollView contentContainerStyle={commonStyles.loginRegisterWrapper}>
         <View style={commonStyles.uppercard}>
           <Text style={commonStyles.authWelcomeText}>
-            WELCOME
+            {TextStrings.WELCOME}
           </Text>
         </View>
         <View style={commonStyles.lowerCardWrapper}>
@@ -66,12 +67,12 @@ function Register() {
             <KeyboardAwareScrollView style={{ marginTop: 20 }} showsVerticalScrollIndicator={false}>
               <View style={commonStyles.authCardView}>
                 <View style={commonStyles.flex1}>
-                  <Text style={commonStyles.authLogin}>Register</Text>
+                  <Text style={commonStyles.authLogin}>{TextStrings.REGISTER}</Text>
                   <Text />
                   <View style={[commonStyles.inputContainer, { marginTop: 10 }]}>
                     <TextInput
                       style={commonStyles.inputs}
-                      placeholder="Enter Full Name"
+                      placeholder={TextStrings.ENTER_FULL_NAME}
                       underlineColorAndroid="transparent"
                       onChangeText={value => setname(value)}
                       value={name}
@@ -81,7 +82,7 @@ function Register() {
                   <View style={commonStyles.inputContainer}>
                     <TextInput
                       style={commonStyles.inputs}
-                      placeholder="Enter Email Id"
+                      placeholder={TextStrings.ENTER_EMAIL_ID}
                       underlineColorAndroid="transparent"
                       keyboardType="email-address"
                       autoCapitalize="none"
@@ -94,7 +95,7 @@ function Register() {
                   <View style={commonStyles.inputContainer}>
                     <TextInput
                       style={commonStyles.inputs}
-                      placeholder="Enter Password"
+                      placeholder={TextStrings.ENTER_PASSWORD}
                       underlineColorAndroid="transparent"
                       onChangeText={value => setpass(value)}
                       value={pass}
@@ -105,15 +106,15 @@ function Register() {
                   <Text />
 
                   <TouchableOpacity style={commonStyles.authBtn} onPress={registerUser}>
-                    <Text style={commonStyles.authBtnText}>Register Now</Text>
+                    <Text style={commonStyles.authBtnText}>{TextStrings.REGISTER_NOW}</Text>
                   </TouchableOpacity>
 
                   <View style={commonStyles.authContactView}>
-                    <Text style={commonStyles.authSmallTxt}>Existing user?</Text>
+                    <Text style={commonStyles.authSmallTxt}>{TextStrings.EXISTING_USER}</Text>
                     <TouchableOpacity
                       style={{ marginLeft: 4 }}
                       onPress={() => Navigation.navigate('Login')}>
-                      <Text style={commonStyles.authRegisterStyle}>Login Now</Text>
+                      <Text style={commonStyles.authRegisterStyle}>{TextStrings.LOGIN_NOW}</Text>
                     </TouchableOpacity>
                   </View>
                   <View>

@@ -9,6 +9,7 @@ import HomeHeader from '../../component/Header/HomeHeader';
 import Navigation from '../../service/Navigation';
 import { useSelector } from 'react-redux';
 import { commonStyles } from '../../utils/Styles';
+import TextStrings from '../../utils/TextStrings';
 const Home = () => {
 
   const { userData } = useSelector(state => state.User);
@@ -51,7 +52,7 @@ const Home = () => {
                 name="image" type="Ionicons" size={22}
               />
               <ListItem.Subtitle style={styles.lastMsg} numberOfLines={1}>
-                Photo
+                {TextStrings.PHOTO}
               </ListItem.Subtitle>
             </View>
             : <ListItem.Subtitle style={styles.lastMsg} numberOfLines={1}>

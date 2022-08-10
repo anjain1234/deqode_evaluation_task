@@ -12,6 +12,7 @@ import ImgToBase64 from 'react-native-image-base64';
 import RenderMessageBlock from './renderMessageComponent';
 import RenderMessageImgComponent from './renderMessageImgComponent';
 import { commonStyles } from '../../utils/Styles';
+import TextStrings from '../../utils/TextStrings';
 
 const SingleChat = (props) => {
 
@@ -132,7 +133,7 @@ const SingleChat = (props) => {
                 <View style={{ width: 5 }} />
                 <TextInput
                     style={styles.inputStyle}
-                    placeholder="type a message"
+                    placeholder={TextStrings.TYPE_A_MESSAGE}
                     placeholderTextColor={COLORS.black}
                     multiline={true}
                     value={msg}

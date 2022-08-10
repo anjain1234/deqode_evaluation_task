@@ -16,6 +16,7 @@ import database from '@react-native-firebase/database';
 import { useDispatch } from 'react-redux';
 import Auth from '../../service/Auth';
 import { commonStyles } from '../../utils/Styles';
+import TextStrings from '../../utils/TextStrings';
 
 function Login() {
   const dispatch = useDispatch();
@@ -57,14 +58,14 @@ function Login() {
       <ScrollView contentContainerStyle={commonStyles.loginRegisterWrapper}>
         <View style={commonStyles.uppercard}>
           <Text style={commonStyles.authWelcomeText}>
-            Welcome
+            {TextStrings.WELCOME}
           </Text>
         </View>
         <View style={commonStyles.lowerCardWrapper}>
           <Card style={commonStyles.lowerCard}>
             <View style={commonStyles.authCardView}>
               <View>
-                <Text style={commonStyles.authLogin}>Login</Text>
+                <Text style={commonStyles.authLogin}>{TextStrings.LOGIN}</Text>
                 <Text />
                 <Text />
                 <KeyboardAwareScrollView
@@ -73,7 +74,7 @@ function Login() {
                   <View style={commonStyles.inputContainer}>
                     <TextInput
                       style={commonStyles.inputs}
-                      placeholder="Enter Email Id"
+                      placeholder={TextStrings.ENTER_EMAIL_ID}
                       keyboardType="email-address"
                       autoCapitalize="none"
                       underlineColorAndroid="transparent"
@@ -88,7 +89,7 @@ function Login() {
                   <View style={commonStyles.inputContainer}>
                     <TextInput
                       style={commonStyles.inputs}
-                      placeholder="Enter Password"
+                      placeholder={TextStrings.ENTER_PASSWORD}
                       secureTextEntry={true}
                       underlineColorAndroid="transparent"
                       onChangeText={value => {
@@ -102,15 +103,15 @@ function Login() {
                 <Text />
 
                 <TouchableOpacity style={commonStyles.authBtn} onPress={loginUser}>
-                  <Text style={commonStyles.authBtnText}>Login Now</Text>
+                  <Text style={commonStyles.authBtnText}>{TextStrings.LOGIN_NOW}</Text>
                 </TouchableOpacity>
 
                 <View style={commonStyles.authContactView}>
-                  <Text style={commonStyles.authSmallTxt}>New user?</Text>
+                  <Text style={commonStyles.authSmallTxt}>{TextStrings.NEW_USER}</Text>
                   <TouchableOpacity
                     style={{ marginLeft: 4 }}
                     onPress={() => Navigation.navigate('Register')}>
-                    <Text style={commonStyles.authRegisterStyle}>Register Now</Text>
+                    <Text style={commonStyles.authRegisterStyle}>{TextStrings.REGISTER_NOW}</Text>
                   </TouchableOpacity>
                 </View>
                 <View></View>
