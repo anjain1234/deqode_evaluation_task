@@ -15,6 +15,7 @@ import uuid from 'react-native-uuid';
 import Toast from 'react-native-simple-toast';
 import { commonStyles } from '../../utils/Styles';
 import TextStrings from '../../utils/TextStrings';
+import Database from '../../service/Database';
 
 function Register() {
 
@@ -34,19 +35,12 @@ function Register() {
       password: pass,
       img: "https://images.pexels.com/photos/2811087/pexels-photo-2811087.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     };
-    database()
-      .ref('/users/' + data.id)
-      .set(data)
-      .then((dataVal) => {
-        Toast.show('Register Successfully!');
-        setname("")
-        setemail("")
-        setpass("")
-        Navigation.navigate("Login")
-      })
-      .catch((error) => {
-        Toast.show("Something went wrong!")
-      })
+    Database.databaseRegister(data, () => {
+      setname("")
+      setemail("")
+      setpass("")
+      Navigation.navigate("Login")
+    })
   }
 
   return (

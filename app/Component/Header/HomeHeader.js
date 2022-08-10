@@ -7,7 +7,6 @@ import { FONTS } from '../Constant/Font'
 import Auth from '../../service/Auth'
 import { useDispatch } from 'react-redux'
 import { removeUser } from '../../redux/reducer/user'
-import TextStrings from '../../utils/TextStrings'
 
 const HomeHeader = ({ userData }) => {
 
@@ -27,7 +26,7 @@ const HomeHeader = ({ userData }) => {
                     onPress={handleLogout}
                 >
                     <Icon
-                        name={TextStrings.LOGOUT}
+                        name="logout"
                         type="AntDesign"
                         size={24}
                         style={styles.logoutIcon}

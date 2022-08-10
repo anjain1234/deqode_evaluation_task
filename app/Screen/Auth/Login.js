@@ -11,12 +11,11 @@ import { Card } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS } from '../../component/Constant/Color';
 import Navigation from '../../service/Navigation';
-import Toast from 'react-native-simple-toast';
-import database from '@react-native-firebase/database';
 import { useDispatch } from 'react-redux';
-import Auth from '../../service/Auth';
 import { commonStyles } from '../../utils/Styles';
 import TextStrings from '../../utils/TextStrings';
+import Database from '../../service/Database';
+import { setUser } from '../../redux/reducer/user';
 
 function Login() {
   const dispatch = useDispatch();
@@ -27,25 +26,7 @@ function Login() {
   useEffect(() => { }, []);
 
   const loginUser = async () => {
-    database()
-      .ref('/users/')
-      .orderByChild('emailId')
-      .equalTo(email)
-      .once('value')
-      .then(async snapshot => {
-        if (snapshot.val() == null) {
-          Toast.show('Invalid Email Id');
-          return false;
-        }
-        let userData = Object.values(snapshot.val())[0];
-        if (userData?.password !== pass) {
-          Toast.show('Invalid Password');
-          return false;
-        }
-        dispatch(setUser(userData));
-        await Auth.setAccount(userData);
-        Toast.show('Login Successfully!');
-      });
+    Database.databaseLogin(email, pass, (userData) => { dispatch(setUser(userData)); });
   };
 
   return (

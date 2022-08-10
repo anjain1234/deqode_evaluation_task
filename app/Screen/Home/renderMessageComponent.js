@@ -2,34 +2,14 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import MsgComponent from '../../component/Chat/MsgComponent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import database from '@react-native-firebase/database';
 import { COLORS } from '../../component/Constant/Color';
-import Toast from 'react-native-simple-toast';
+import Database from '../../service/Database';
 
 export default function RenderMessageBlock({ item, data, userData }) {
     const [isEditCallback, setIsEditCallback] = React.useState(false);
 
     const handleDelete = () => {
-        setIsEditCallback(false)
-        const newReference = database().ref('/messages/' + data?.roomId + "/" + item.id).remove();
-
-        newReference
-            .then(() => {
-                let chatListUpdate = {
-                    lastMsg: msg,
-                    sendTime: moment().format(),
-                }
-                database()
-                    .ref('/chatlist/' + data.id + "/" + userData.id)
-                    .update(chatListUpdate)
-                    .then(() => { Toast.show("Data Updated.") });
-
-                database()
-                    .ref('/chatlist/' + userData.id + "/" + data.id)
-                    .update(chatListUpdate)
-                    .then(() => { Toast.show("Data Updated.") });
-
-            });
+        Database.handleDeleteChat(data, item, msg, userData, setIsEditCallback);
     }
 
     return (

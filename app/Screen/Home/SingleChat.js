@@ -13,6 +13,7 @@ import RenderMessageBlock from './renderMessageComponent';
 import RenderMessageImgComponent from './renderMessageImgComponent';
 import { commonStyles } from '../../utils/Styles';
 import TextStrings from '../../utils/TextStrings';
+import Database from '../../service/Database';
 
 const SingleChat = (props) => {
 
@@ -25,13 +26,9 @@ const SingleChat = (props) => {
     const [allChat, setallChat] = React.useState([]);
 
     useEffect(() => {
-        const onChildAdd = database()
-            .ref('/messages/' + data?.roomId)
-            .on('child_added', snapshot => {
-                setallChat((state) => [snapshot.val(), ...state]);
-            })
+        const onChildAdd = Database.handleOnChildAdd(data, setallChat)
 
-        return () => database().ref('/messages/').off('child_added', onChildAdd);
+        return () => Database.returnOnChildAdd(onChildAdd)
     }, [data?.roomId])
 
 
@@ -66,29 +63,7 @@ const SingleChat = (props) => {
             }
         }
 
-        const newReference = database().ref('/messages/' + data?.roomId).push();
-
-        msgData.id = newReference.key;
-        newReference
-            .set(msgData)
-            .then(() => {
-                let chatListUpdate = {
-                    lastMsg: msg,
-                    sendTime: msgData.sendTime,
-                }
-                database()
-                    .ref('/chatlist/' + data.id + "/" + userData.id)
-                    .update(chatListUpdate)
-                    .then(() => { Toast.show("Data Updated.") });
-
-                database()
-                    .ref('/chatlist/' + userData.id + "/" + data.id)
-                    .update(chatListUpdate)
-                    .then(() => { Toast.show("Data Updated.") });
-
-                setMsg("");
-                setdisabled(false);
-            });
+        Database.handleSendMsg(data, msg, msgData, userData, setMsg, setdisabled)
     }
 
     const picImage = () => {

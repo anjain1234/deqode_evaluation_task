@@ -4,11 +4,10 @@ import { ListItem, Avatar } from 'react-native-elements';
 import SearchBar from 'react-native-elements/dist/searchbar/SearchBar-ios';
 import { COLORS } from '../../component/Constant/Color';
 import { FONTS } from '../../component/Constant/Font';
-import database from '@react-native-firebase/database';
 import { useSelector } from 'react-redux';
-import Navigation from '../../service/Navigation';
-import uuid from 'react-native-uuid';
+
 import TextStrings from '../../utils/TextStrings';
+import Database from '../../service/Database';
 
 const AllUser = () => {
 
@@ -19,60 +18,15 @@ const AllUser = () => {
   const [allUserBackup, setAllUserBackup] = useState([]);
 
   useEffect(() => {
-    getAllUsers();
+    Database.getAllUsers(userData, setAllUser, setAllUserBackup);
   }, [])
-
-  const getAllUsers = () => {
-    database()
-      .ref("/users/")
-      .once('value')
-      .then(snapshot => {
-        setAllUser(Object.values(snapshot.val()).filter((it) => it.id !== userData))
-        setAllUserBackup(Object.values(snapshot.val()).filter((it) => it.id !== userData))
-      });
-  }
 
   const searchUser = (val) => {
     setsearch(val);
     setAllUser(allUserBackup.filter((it) => it.name.match(val)))
   }
 
-  const createChatList = (data) => {
-    database()
-      .ref('/chatlist/' + userData.id + "/" + data.id)
-      .once('value')
-      .then(snapshot => {
-        if (snapshot.val() === null) {
-          let roomId = uuid.v4();
-          let mydata = {
-            roomId,
-            id: userData.id,
-            name: userData?.name,
-            img: userData?.img,
-            emailId: userData?.emailId,
-            lastMsg: "",
-          }
 
-          database()
-            .ref("/chatlist/" + data?.id + "/" + userData?.id)
-            .update(mydata)
-            .then(() => { Toast.show("Data Updated.") });
-
-          delete data["password"]
-          data.lastMsg = "";
-          data.roomId = roomId;
-
-          database()
-            .ref("/chatlist/" + userData?.id + "/" + data?.id)
-            .update(data)
-            .then(() => { Toast.show("Data Updated.") });
-
-          Navigation.navigate("SingleChat", { data: data });
-        } else {
-          Navigation.navigate("SingleChat", { data: snapshot.val() });
-        }
-      });
-  }
 
   const renderItem = ({ item }) => {
     if (userData.emailId === item.emailId) {
@@ -81,7 +35,7 @@ const AllUser = () => {
     return (
       <ListItem
         bottomDivider
-        onPress={() => createChatList(item)}
+        onPress={() => Database.createChatList(item, userData)}
         containerStyle={styles.listItemWrapper}>
         <Avatar
           source={{ uri: item.img }}

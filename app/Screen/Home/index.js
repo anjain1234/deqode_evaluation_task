@@ -10,6 +10,7 @@ import Navigation from '../../service/Navigation';
 import { useSelector } from 'react-redux';
 import { commonStyles } from '../../utils/Styles';
 import TextStrings from '../../utils/TextStrings';
+import Database from '../../service/Database';
 const Home = () => {
 
   const { userData } = useSelector(state => state.User);
@@ -17,18 +18,8 @@ const Home = () => {
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
-    getChatList();
+    Database.getChatList(userData, setChatList);
   }, [])
-
-  const getChatList = () => {
-    database()
-      .ref('/chatlist/' + userData?.id)
-      .on('value', snapshot => {
-        if (snapshot?.val() != null) {
-          setChatList(Object.values(snapshot?.val()))
-        }
-      })
-  }
 
   const renderItem = ({ item }) => {
     return (
