@@ -1,4 +1,4 @@
-import { StackActions, DrawerActions, CommonActions  } from '@react-navigation/native'
+import { StackActions, DrawerActions, CommonActions } from '@react-navigation/native'
 
 let _navigator
 
@@ -10,7 +10,7 @@ function navigate(routeName, params) {
   _navigator.dispatch(
     CommonActions.navigate({
       name: routeName,
-      params : params
+      params: params
     })
   )
 }
@@ -19,7 +19,7 @@ function replace(routeName, params) {
   _navigator.dispatch(
     StackActions.replace({
       name: routeName,
-      params : params
+      params: params
     })
   )
 }

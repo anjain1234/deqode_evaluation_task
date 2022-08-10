@@ -16,8 +16,6 @@ import { FONTS } from '../../component/Constant/Font';
 import Navigation from '../../service/Navigation';
 import uuid from 'react-native-uuid';
 import Toast from 'react-native-simple-toast';
-import database from '@react-native-firebase/database';
-
 const { width, height } = Dimensions.get('window');
 
 function Register() {

@@ -8,8 +8,6 @@ import { FONTS } from '../../component/Constant/Font';
 import HomeHeader from '../../component/Header/HomeHeader';
 import Navigation from '../../service/Navigation';
 import { useSelector } from 'react-redux';
-import database from '@react-native-firebase/database';
-
 const Home = () => {
 
   const { userData } = useSelector(state => state.User);

@@ -18,8 +18,6 @@ import Toast from 'react-native-simple-toast';
 import database from '@react-native-firebase/database';
 import { useDispatch } from 'react-redux';
 import Auth from '../../service/Auth';
-import { setUser } from '../../redux/reducer/user';
-
 const { width, height } = Dimensions.get('window');
 
 function Login() {
