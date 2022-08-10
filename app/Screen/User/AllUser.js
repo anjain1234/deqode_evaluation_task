@@ -81,7 +81,7 @@ const AllUser = () => {
       <ListItem
         bottomDivider
         onPress={() => createChatList(item)}
-        containerStyle={{ paddingVertical: 7, marginVertical: 2 }}>
+        containerStyle={styles.listItemWrapper}>
         <Avatar
           source={{ uri: item.img }}
           rounded
@@ -89,14 +89,13 @@ const AllUser = () => {
           size="medium"
         />
         <ListItem.Content>
-          <ListItem.Title style={{ fontFamily: FONTS.Medium, fontSize: 14 }}>
+          <ListItem.Title style={styles.nameStyle}>
             {item.name}
           </ListItem.Title>
           <ListItem.Subtitle
-            style={{ fontFamily: FONTS.Regular, fontSize: 12 }}
+            style={styles.emailStyle}
             numberOfLines={1}>
             {item.emailId}
-            {/* {"Hey there, how are you?"} */}
           </ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
@@ -104,7 +103,7 @@ const AllUser = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+    <View style={styles.containerWrapper}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
       <SearchBar
         placeholder="Search by name..."
@@ -127,6 +126,10 @@ const AllUser = () => {
 export default AllUser;
 
 const styles = StyleSheet.create({
+  containerWrapper: {
+    flex: 1,
+    backgroundColor: COLORS.white
+  },
   searchContainer: {
     elevation: 2,
     backgroundColor: COLORS.white,
@@ -137,6 +140,17 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.Regular,
     color: COLORS.black,
     opacity: 0.7,
-
   },
+  nameStyle: {
+    fontFamily: FONTS.Medium,
+    fontSize: 14,
+  },
+  emailStyle: {
+    fontFamily: FONTS.Regular,
+    fontSize: 12,
+  },
+  listItemWrapper: {
+    paddingVertical: 7,
+    marginVertical: 2
+  }
 });

@@ -1,5 +1,5 @@
 import Icon from 'react-native-vector-icons/Ionicons';
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { COLORS } from '../Constant/Color';
 import { FONTS } from '../Constant/Font';
@@ -9,17 +9,12 @@ import Navigation from '../../service/Navigation';
 const ChatHeader = (props) => {
     const { data } = props;
 
-    const [lastSeen, setlastSeen] = useState('')
-
     return (
         <View style={styles.container}>
 
             <StatusBar barStyle="light-content" backgroundColor={COLORS.theme} translucent={false} />
             <Icon
-                style={{
-                    marginHorizontal: 10,
-                    color: COLORS.white,
-                }}
+                style={styles.chevronBackIcon}
                 name="chevron-back"
                 type="Ionicons"
                 size={24}
@@ -31,38 +26,18 @@ const ChatHeader = (props) => {
                 size="small"
             />
 
-            <View
-                style={{ flex: 1, marginLeft: 10 }}
-            >
+            <View style={styles.nameTextWrapper}>
                 <Text
                     numberOfLines={1}
-                    style={{
-                        color: COLORS.white,
-                        fontSize: 16,
-                        fontFamily: FONTS.SemiBold,
-                        textTransform: 'capitalize'
-                    }}
+                    style={styles.nameText}
                 >
                     {data?.name}
                 </Text>
             </View>
-
-            {/*  */}
-
-            {/* <Icon
-                style={{
-                    marginHorizontal: 10,
-                    color: COLORS.themeColor
-                }}
-                name="videocam-outline"
-                type="Ionicons"
-            /> */}
-
         </View>
     );
 };
 
-// define your styles
 const styles = StyleSheet.create({
     container: {
         height: 70,
@@ -71,7 +46,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    chevronBackIcon: {
+        marginHorizontal: 10,
+        color: COLORS.white,
+    },
+    nameTextWrapper: {
+        flex: 1, marginLeft: 10
+    },
+    nameText: {
+        color: COLORS.white,
+        fontSize: 16,
+        fontFamily: FONTS.SemiBold,
+        textTransform: 'capitalize'
+    }
 });
 
-//make this component available to the app
 export default ChatHeader;

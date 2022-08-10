@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import MsgComponent from '../../component/Chat/MsgComponent';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -44,21 +44,15 @@ export default function RenderMessageBlock({ item, data, userData }) {
                 sender={item.from === userData.id}
                 item={item}
             />
-            {isEditCallback ? <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: 0 }}>
+            {isEditCallback ? <View style={styles.editWrapper}>
                 <AntDesign
-                    style={{
-                        marginHorizontal: 10,
-                        color: COLORS.black,
-                    }}
+                    style={styles.editIcon}
                     name="edit"
                     type="AntDesign"
                     size={20}
                 />
                 <AntDesign
-                    style={{
-                        marginHorizontal: 10,
-                        color: COLORS.black,
-                    }}
+                    style={styles.deleteIcon}
                     name="delete"
                     type="AntDesign"
                     size={20}
@@ -68,3 +62,20 @@ export default function RenderMessageBlock({ item, data, userData }) {
         </TouchableOpacity>
     );
 }
+
+const styles = StyleSheet.create({
+    editWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        left: 0,
+    },
+    editIcon: {
+        marginHorizontal: 10,
+        color: COLORS.black,
+    },
+    deleteIcon: {
+        marginHorizontal: 10,
+        color: COLORS.black,
+    }
+})

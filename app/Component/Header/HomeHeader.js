@@ -21,7 +21,7 @@ const HomeHeader = ({ userData }) => {
     return (
         <View style={styles.main}>
             <Text style={styles.logo}>{userData.name}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.logoutWrapper}>
                 <TouchableWithoutFeedback
                     onPress={handleLogout}
                 >
@@ -29,7 +29,7 @@ const HomeHeader = ({ userData }) => {
                         name="logout"
                         type="AntDesign"
                         size={24}
-                        style={{ color: COLORS.theme, marginRight: 30 }}
+                        style={styles.logoutIcon}
                     />
                 </TouchableWithoutFeedback>
                 <Avatar
@@ -56,4 +56,12 @@ const styles = StyleSheet.create({
         color: COLORS.theme,
         fontSize: 22,
     },
+    logoutWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    logoutIcon: {
+        color: COLORS.theme,
+        marginRight: 30
+    }
 })

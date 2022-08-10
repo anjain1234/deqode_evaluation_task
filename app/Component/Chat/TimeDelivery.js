@@ -7,16 +7,8 @@ import { COLORS } from '../Constant/Color';
 const TimeDelivery = (props) => {
     const { sender, item } = props;
     return (
-        <View
-            style={[styles.mainView, {
-                justifyContent: 'flex-end',
-            }]}
-        >
-            <Text style={{
-                fontFamily: 'Poppins-Regular',
-                fontSize: 7,
-                color: sender ? COLORS.white : COLORS.black
-            }}>
+        <View style={[styles.mainView]}>
+            <Text style={[styles.timeText, { color: sender ? COLORS.white : COLORS.black }]}>
                 {moment(item.send_time).format('LLL')}
             </Text>
 
@@ -34,7 +26,12 @@ const styles = StyleSheet.create({
     mainView: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 2
+        marginBottom: 2,
+        justifyContent: 'flex-end',
+    },
+    timeText: {
+        fontFamily: 'Poppins-Regular',
+        fontSize: 7,
     }
 });
 

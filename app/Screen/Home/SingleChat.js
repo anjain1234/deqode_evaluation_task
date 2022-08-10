@@ -11,6 +11,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import ImgToBase64 from 'react-native-image-base64';
 import RenderMessageBlock from './renderMessageComponent';
 import RenderMessageImgComponent from './renderMessageImgComponent';
+import { commonStyles } from '../../utils/Styles';
 
 const SingleChat = (props) => {
 
@@ -100,17 +101,15 @@ const SingleChat = (props) => {
         });
     }
 
-
-
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.flex1}>
             <ChatHeader data={data} />
             <ImageBackground
                 source={require('../../assets/Background.jpg')}
-                style={{ flex: 1 }}
+                style={commonStyles.flex1}
             >
                 <FlatList
-                    style={{ flex: 1 }}
+                    style={commonStyles.flex1}
                     data={allChat}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index}
@@ -146,9 +145,7 @@ const SingleChat = (props) => {
                     onPress={picImage}
                 >
                     <Icon
-                        style={{
-                            color: COLORS.white
-                        }}
+                        color={COLORS.white}
                         name="image"
                         type="Ionicons"
                         size={26}
@@ -162,9 +159,7 @@ const SingleChat = (props) => {
                     onPress={() => { sendMsg(msg) }}
                 >
                     <Icon
-                        style={{
-                            color: COLORS.white
-                        }}
+                        color={COLORS.white}
                         name="paper-plane-sharp"
                         type="Ionicons"
                         size={26}
@@ -181,9 +176,6 @@ const SingleChat = (props) => {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     inputWrapper: {
         backgroundColor: COLORS.theme,
         elevation: 5,

@@ -3,25 +3,21 @@ import {
   StatusBar,
   Text,
   View,
-  Dimensions,
   TouchableOpacity,
-  StyleSheet,
   TextInput,
   ScrollView,
 } from 'react-native';
 import { Card } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS } from '../../component/Constant/Color';
-import { FONTS } from '../../component/Constant/Font';
 import Navigation from '../../service/Navigation';
 import Toast from 'react-native-simple-toast';
 import database from '@react-native-firebase/database';
 import { useDispatch } from 'react-redux';
 import Auth from '../../service/Auth';
-const { width, height } = Dimensions.get('window');
+import { commonStyles } from '../../utils/Styles';
 
 function Login() {
-
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
@@ -31,25 +27,25 @@ function Login() {
 
   const loginUser = async () => {
     database()
-      .ref("/users/")
-      .orderByChild("emailId")
+      .ref('/users/')
+      .orderByChild('emailId')
       .equalTo(email)
       .once('value')
       .then(async snapshot => {
         if (snapshot.val() == null) {
-          Toast.show("Invalid Email Id");
+          Toast.show('Invalid Email Id');
           return false;
         }
         let userData = Object.values(snapshot.val())[0];
         if (userData?.password !== pass) {
-          Toast.show("Invalid Password");
+          Toast.show('Invalid Password');
           return false;
         }
         dispatch(setUser(userData));
         await Auth.setAccount(userData);
-        Toast.show("Login Successfully!");
-      })
-  }
+        Toast.show('Login Successfully!');
+      });
+  };
 
   return (
     <ScrollView>
@@ -58,36 +54,25 @@ function Login() {
         barStyle="light-content"
         hidden={false}
       />
-      <ScrollView contentContainerStyle={{ justifyContent: "space-between", height: "100%" }}>
-        <View style={styles.uppercard}>
-          <Text
-            style={{
-              color: '#fff',
-              fontFamily: FONTS.Bold,
-              fontSize: 25
-            }}>
+      <ScrollView contentContainerStyle={commonStyles.loginRegisterWrapper}>
+        <View style={commonStyles.uppercard}>
+          <Text style={commonStyles.authWelcomeText}>
             Welcome
           </Text>
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center', height: 3 * height / 4, }}>
-          <Card
-            style={{
-              backgroundColor: '#fff',
-              width: '92%',
-              borderRadius: 15,
-              marginHorizontal: 18
-            }}>
-            <View style={styles.cardView}>
+        <View style={commonStyles.lowerCardWrapper}>
+          <Card style={commonStyles.lowerCard}>
+            <View style={commonStyles.authCardView}>
               <View>
-                <Text style={styles.Login}>Login</Text>
-                <Text /><Text />
+                <Text style={commonStyles.authLogin}>Login</Text>
+                <Text />
+                <Text />
                 <KeyboardAwareScrollView
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}>
-
-                  <View style={[styles.inputContainer, { marginTop: 10 }]}>
+                  <View style={commonStyles.inputContainer}>
                     <TextInput
-                      style={styles.inputs}
+                      style={commonStyles.inputs}
                       placeholder="Enter Email Id"
                       keyboardType="email-address"
                       autoCapitalize="none"
@@ -100,9 +85,9 @@ function Login() {
                     />
                   </View>
 
-                  <View style={styles.inputContainer}>
+                  <View style={commonStyles.inputContainer}>
                     <TextInput
-                      style={styles.inputs}
+                      style={commonStyles.inputs}
                       placeholder="Enter Password"
                       secureTextEntry={true}
                       underlineColorAndroid="transparent"
@@ -116,23 +101,19 @@ function Login() {
                 </KeyboardAwareScrollView>
                 <Text />
 
-                <TouchableOpacity
-                  style={styles.btn}
-                  onPress={loginUser}
-                >
-                  <Text style={styles.btnText}>Login Now</Text>
+                <TouchableOpacity style={commonStyles.authBtn} onPress={loginUser}>
+                  <Text style={commonStyles.authBtnText}>Login Now</Text>
                 </TouchableOpacity>
 
-                <View style={styles.contactView}>
-                  <Text style={styles.smallTxt}>New user?</Text>
-                  <TouchableOpacity style={{ marginLeft: 4 }}
+                <View style={commonStyles.authContactView}>
+                  <Text style={commonStyles.authSmallTxt}>New user?</Text>
+                  <TouchableOpacity
+                    style={{ marginLeft: 4 }}
                     onPress={() => Navigation.navigate('Register')}>
-                    <Text style={styles.register}>Register Now</Text>
+                    <Text style={commonStyles.authRegisterStyle}>Register Now</Text>
                   </TouchableOpacity>
                 </View>
-                <View>
-
-                </View>
+                <View></View>
               </View>
             </View>
           </Card>
@@ -143,121 +124,3 @@ function Login() {
 }
 
 export default Login;
-
-const styles = StyleSheet.create({
-  uppercard: {
-    width: width,
-    height: height / 4,
-    backgroundColor: COLORS.theme,
-    borderBottomLeftRadius: height / 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: height / 2 - 50,
-    width: '95%',
-    resizeMode: 'cover',
-    borderRadius: 13,
-  },
-  loginBtn: {
-    height: 48,
-    width: '95%',
-    backgroundColor: COLORS.theme,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 6,
-  },
-  loginText: {
-    color: COLORS.lightgray,
-    fontSize: 18,
-    fontFamily: FONTS.Regular,
-  },
-  buttonSec: { marginTop: 20, justifyContent: 'center', alignItems: 'center' },
-  logo: {
-    height: height / 2 - 50,
-    width: '95%',
-    resizeMode: 'cover',
-    borderRadius: 13,
-  },
-
-  inputs: {
-    borderBottomColor: COLORS.white,
-    flex: 1,
-    color: "#000",
-    paddingLeft: 10,
-    fontFamily: FONTS.Regular,
-    paddingLeft: 20
-  },
-  inputContainer: {
-    borderRadius: 30,
-    height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    marginBottom: 10,
-    elevation: 2,
-  },
-  inputIconView: {
-    width: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.theme,
-    height: '100%',
-    borderRadius: 30,
-    alignSelf: 'center',
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    elevation: 2,
-  },
-  smallTxt: {
-    fontSize: 13,
-    color: COLORS.black,
-    fontFamily: FONTS.Regular,
-    marginTop: 10,
-    opacity: .5,
-    textAlign: 'center',
-  },
-  register: {
-    fontSize: 13,
-    fontFamily: FONTS.SemiBold,
-    marginTop: 12,
-    textAlign: 'center',
-    color: COLORS.textInput,
-    textDecorationLine: 'underline'
-  },
-  contactView: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  btnText: {
-    color: '#fff',
-    fontFamily: FONTS.SemiBold,
-    fontSize: 14,
-    marginTop: 2,
-  },
-  btn: {
-    backgroundColor: COLORS.theme,
-    width: '100%',
-    height: 50,
-    borderRadius: 30,
-    elevation: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  Login: {
-    alignSelf: 'center',
-    fontFamily: FONTS.Medium,
-    color: COLORS.textInput,
-    fontSize: 20,
-    marginTop: 10,
-  },
-  cardView: {
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    paddingBottom: 20,
-    paddingTop: 20,
-  }
-});
